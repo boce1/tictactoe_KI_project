@@ -1,8 +1,8 @@
 from .board_check import is_win, is_full
 
-score_even_cell = 1
-score_two_signs = 2
-score_two_sign_on_edges = 3
+score_even_cell = 10
+score_two_signs = 1
+score_two_sign_on_edges = 5
 
 def evaluate(board, ai_player):
     # # #

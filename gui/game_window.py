@@ -10,13 +10,13 @@ class Game_Window:
         self.row_width = WIDTH // 3
         self.col_height = HEIGHT // 3
 
-        self.player_turn = False # False for PLAYER_X, True for PLAYER_O, TODO add fucntinon to switch sides
+        self.human_playing = True # False for PLAYER_X, True for PLAYER_O, TODO add fucntinon to switch sides
         self.turn = False # False for PLAYER_X, True for PLAYER_O
 
         self.board = board
 
     def choose_move(self, mouse_pos, event):
-        if self.player_turn == self.turn and event.type == pygame.MOUSEBUTTONDOWN:
+        if self.human_playing == self.turn and event.type == pygame.MOUSEBUTTONDOWN:
             x, y = mouse_pos
             if 0 <= x <= WIDTH and 0 <= y <= HEIGHT:
                 col = x // self.row_width
@@ -27,21 +27,36 @@ class Game_Window:
                     self.board.insert_move(row, col, player)
                     self.turn = not self.turn
 
+    def find_moves(self):
+        moves = []
+        even_cells = []
+        odd_cells = []
+        for r in range(3):
+            for c in range(3):
+                if self.board.state[r][c] == self.board.EMPTY:
+                    if (r + c) % 2 == 0:
+                        even_cells.append((r, c))
+                    else:
+                        odd_cells.append((r, c))
+        moves.extend(even_cells)
+        moves.extend(odd_cells)        
+        return moves
+
     def generate_move(self):
-        if self.turn != self.player_turn:
+        if self.turn != self.human_playing:
             best_move = None
             best_score = -inf
-            player = self.board.PLAYER_X if self.player_turn else self.board.PLAYER_O
+            player = self.board.PLAYER_O if not self.human_playing else self.board.PLAYER_X
 
-            for r in range(3):
-                for c in range(3):
-                    if self.board.state[r][c] == self.board.EMPTY:
-                        self.board.insert_move(r, c, player)
-                        score = minimax(self.board, 5, False, player)
-                        self.board.state[r][c] = self.board.EMPTY  # Undo move
-                        if score > best_score:
-                            best_score = score
-                            best_move = (r, c)
+            for move in self.find_moves():
+                r, c = move
+                if self.board.state[r][c] == self.board.EMPTY:
+                    self.board.insert_move(r, c, player)
+                    score = minimax(self.board, 9, -inf, inf, False, player)
+                    self.board.state[r][c] = self.board.EMPTY  # Undo move
+                    if score > best_score:
+                        best_score = score
+                        best_move = (r, c)
             if best_move:
                 self.board.insert_move(best_move[0], best_move[1], player)
                 self.turn = not self.turn
@@ -67,12 +82,12 @@ class Game_Window:
         pygame.display.update()
 
     def finish(self):
-        if not self.player_turn and is_win(self.board.PLAYER_X, self.board) or \
-            self.player_turn and is_win(self.board.PLAYER_O, self.board): 
+        if not self.human_playing and is_win(self.board.PLAYER_X, self.board) or \
+            self.human_playing and is_win(self.board.PLAYER_O, self.board): 
             # if the player is X and X wins or player is O and O wins
             print("You won!")
-        if not self.player_turn and is_win(self.board.PLAYER_O, self.board) or \
-            self.player_turn and is_win(self.board.PLAYER_X, self.board): 
+        if not self.human_playing and is_win(self.board.PLAYER_O, self.board) or \
+            self.human_playing and is_win(self.board.PLAYER_X, self.board): 
             # if the player is X and X loses or player is O and O loses
             print("You lost!")
         

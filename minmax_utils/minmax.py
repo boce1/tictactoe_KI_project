@@ -2,7 +2,7 @@ from .evaluation import evaluate
 from .board_check import is_win, is_full
 from math import inf
 
-def minimax(board, depth, is_maximizing, ai_player):
+def minimax(board, depth, alpha, beta, is_maximizing, ai_player):
     human_player = board.PLAYER_O if ai_player == board.PLAYER_X else board.PLAYER_X
 
     if is_win(ai_player, board):
@@ -20,9 +20,12 @@ def minimax(board, depth, is_maximizing, ai_player):
             for c in range(3):
                 if board.state[r][c] == board.EMPTY:
                     board.insert_move(r, c, ai_player)
-                    score = minimax(board, depth - 1, False, ai_player)
+                    score = minimax(board, depth - 1,  alpha, beta, False, ai_player) 
                     board.state[r][c] = board.EMPTY  # Undo move
                     best_score = max(score, best_score)
+                    alpha = max(alpha, best_score)
+                    if beta <= alpha:
+                        return best_score
         return best_score
     else:
         best_score = inf
@@ -30,7 +33,11 @@ def minimax(board, depth, is_maximizing, ai_player):
             for c in range(3):
                 if board.state[r][c] == board.EMPTY:
                     board.insert_move(r, c, human_player)
-                    score = minimax(board, depth - 1, True, ai_player)
+                    score = minimax(board, depth - 1,  alpha, beta, True, ai_player)
                     board.state[r][c] = board.EMPTY  # Undo move
                     best_score = min(score, best_score)
+                    beta = min(beta, best_score)
+                    if beta <= alpha: 
+                        return best_score
+
         return best_score
