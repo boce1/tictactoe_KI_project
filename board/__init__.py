@@ -5,7 +5,12 @@ class Board:
         self.EMPTY = " "
 
         self.state = [[self.EMPTY for _ in range(3)] for _ in range(3)]
-    
+        # self.state = [
+        #     [self.PLAYER_O,self.PLAYER_O,self.PLAYER_O],
+        #     [self.EMPTY,self.EMPTY,self.EMPTY],
+        #     [self.EMPTY,self.EMPTY,self.EMPTY]
+        # ]
+
     def insert_move(self, row, col, player):
         if player not in [self.PLAYER_X, self.PLAYER_O]:
             raise ValueError("Invalid player")

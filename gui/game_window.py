@@ -1,5 +1,6 @@
 from .constants import *
 from minmax_utils import *
+from math import inf
 
 class Game_Window:
     def __init__(self, board=None):
@@ -15,7 +16,7 @@ class Game_Window:
         self.board = board
 
     def choose_move(self, mouse_pos, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if self.player_turn == self.turn and event.type == pygame.MOUSEBUTTONDOWN:
             x, y = mouse_pos
             if 0 <= x <= WIDTH and 0 <= y <= HEIGHT:
                 col = x // self.row_width
@@ -25,6 +26,25 @@ class Game_Window:
                     player = self.board.PLAYER_O if self.turn else self.board.PLAYER_X
                     self.board.insert_move(row, col, player)
                     self.turn = not self.turn
+
+    def generate_move(self):
+        if self.turn != self.player_turn:
+            best_move = None
+            best_score = -inf
+            player = self.board.PLAYER_X if self.player_turn else self.board.PLAYER_O
+
+            for r in range(3):
+                for c in range(3):
+                    if self.board.state[r][c] == self.board.EMPTY:
+                        self.board.insert_move(r, c, player)
+                        score = minimax(self.board, 5, False, player)
+                        self.board.state[r][c] = self.board.EMPTY  # Undo move
+                        if score > best_score:
+                            best_score = score
+                            best_move = (r, c)
+            if best_move:
+                self.board.insert_move(best_move[0], best_move[1], player)
+                self.turn = not self.turn
 
     def draw_board(self):
         self.window.fill((255, 255, 255))
@@ -59,6 +79,10 @@ class Game_Window:
         if is_win(self.board.PLAYER_X, self.board) or is_win(self.board.PLAYER_O, self.board):
             self.board.reset()
             self.turn = False
+        if is_full(self.board):
+            print("It's a draw!")
+            self.board.reset()
+            self.turn = False
 
 
     def loop(self):
@@ -69,6 +93,7 @@ class Game_Window:
                     running = False
                 mouse_pos = pygame.mouse.get_pos()
                 self.choose_move(mouse_pos, event)
+            self.generate_move()
             self.draw_board()
             self.finish()
             # row = int(input("Enter row (0-2): "))
