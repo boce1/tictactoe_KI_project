@@ -1,6 +1,8 @@
 from .constants import *
+from .finish_screen import *
 from minmax_utils import *
 from math import inf
+from random import shuffle
 
 class Game_Window:
     def __init__(self, board=None):
@@ -10,7 +12,7 @@ class Game_Window:
         self.row_width = WIDTH // 3
         self.col_height = HEIGHT // 3
 
-        self.human_playing = True # False for PLAYER_X, True for PLAYER_O, TODO add fucntinon to switch sides
+        self.human_playing = True  # False for PLAYER_X, True for PLAYER_O, TODO add fucntinon to switch sides
         self.turn = False # False for PLAYER_X, True for PLAYER_O
 
         self.board = board
@@ -38,6 +40,8 @@ class Game_Window:
                         even_cells.append((r, c))
                     else:
                         odd_cells.append((r, c))
+        shuffle(even_cells)
+        shuffle(odd_cells)
         moves.extend(even_cells)
         moves.extend(odd_cells)        
         return moves
@@ -62,7 +66,7 @@ class Game_Window:
                 self.turn = not self.turn
 
     def draw_board(self):
-        self.window.fill((255, 255, 255))
+        self.window.fill(BACKGROUND_COLOR)
 
         # Draw grid lines
         for i in range(1, 3):
@@ -85,19 +89,23 @@ class Game_Window:
         if not self.human_playing and is_win(self.board.PLAYER_X, self.board) or \
             self.human_playing and is_win(self.board.PLAYER_O, self.board): 
             # if the player is X and X wins or player is O and O wins
-            print("You won!")
+            # print("You won!")
+            display_winner(self.window)
         if not self.human_playing and is_win(self.board.PLAYER_O, self.board) or \
             self.human_playing and is_win(self.board.PLAYER_X, self.board): 
             # if the player is X and X loses or player is O and O loses
-            print("You lost!")
-        
+            # print("You lost!")
+            display_loser(self.window)
+
         if is_win(self.board.PLAYER_X, self.board) or is_win(self.board.PLAYER_O, self.board):
             self.board.reset()
             self.turn = False
         if is_full(self.board):
-            print("It's a draw!")
+            # print("It's a draw!")
             self.board.reset()
             self.turn = False
+
+            display_draw(self.window)
 
 
     def loop(self):
@@ -111,11 +119,4 @@ class Game_Window:
             self.generate_move()
             self.draw_board()
             self.finish()
-            # row = int(input("Enter row (0-2): "))
-            # col = int(input("Enter column (0-2): "))
-            # player = input("Enter player (X/O): ").strip().upper()
-            # try:
-            #     board.insert_move(row, col, player)
-            # except ValueError as e:
-            #     print(e)
         pygame.quit()

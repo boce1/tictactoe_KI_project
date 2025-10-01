@@ -1,8 +1,7 @@
 from .board_check import is_win, is_full
 
-score_even_cell = 10
 score_two_signs = 1
-score_two_sign_on_edges = 5
+score_two_sign_on_edges = 2
 
 def evaluate(board, ai_player):
     # # #
@@ -17,16 +16,6 @@ def evaluate(board, ai_player):
     
     main_diagonal = (board.state[0][0], board.state[1][1], board.state[2][2])
     anti_diagonal = (board.state[0][2], board.state[1][1], board.state[2][0])
-
-    # evaluate the move where the player places its sign in an even cell
-    # it leaves more options for winning
-    for i in range(3):
-        for j in range(3):
-            if (i+j) % 2 == 0 and board.state[i][j] == maximazing_player:
-                score += score_even_cell
-            elif (i+j) % 2 == 0 and board.state[i][j] == minimizing_player: 
-                score -= score_even_cell
-
 
     # evaluate the position where theres 2 signs
     for row in board.state:
