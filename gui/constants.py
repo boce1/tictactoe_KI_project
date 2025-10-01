@@ -3,9 +3,12 @@ pygame.init()
 pygame.font.init()
 
 # Constants for the game
-WIDTH, HEIGHT = 600, 600
+WIDTH, HEIGHT = 510, 510
+BAR = 75
+HEIGHT_WITH_BAR = HEIGHT + BAR
 font_players = pygame.font.SysFont('Comic Sans MS', WIDTH // 5)
 font_finish = pygame.font.SysFont('Comic Sans MS', WIDTH // 10)
+font_score = pygame.font.SysFont('Comic Sans MS', WIDTH // 30)
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

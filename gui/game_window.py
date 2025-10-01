@@ -6,23 +6,27 @@ from random import shuffle
 
 class Game_Window:
     def __init__(self, board=None):
-        self.window = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.window = pygame.display.set_mode((WIDTH, HEIGHT_WITH_BAR))
         pygame.display.set_caption("Tic Tac Toe")
 
-        self.row_width = WIDTH // 3
-        self.col_height = HEIGHT // 3
+        self.col_width = WIDTH // 3
+        self.row_height = HEIGHT // 3
 
-        self.human_playing = True  # False for PLAYER_X, True for PLAYER_O, TODO add fucntinon to switch sides
+        self.human_playing = False  # False for PLAYER_X, True for PLAYER_O, TODO add fucntinon to switch sides
         self.turn = False # False for PLAYER_X, True for PLAYER_O
 
         self.board = board
 
+        self.human_player_score = 0
+        self.ai_player_score = 0
+        self.draw_score = 0
+
     def choose_move(self, mouse_pos, event):
         if self.human_playing == self.turn and event.type == pygame.MOUSEBUTTONDOWN:
             x, y = mouse_pos
-            if 0 <= x <= WIDTH and 0 <= y <= HEIGHT:
-                col = x // self.row_width
-                row = y // self.col_height
+            if 0 < x < WIDTH and 0 < y < HEIGHT:
+                col = x // self.col_width
+                row = y // self.row_height
 
                 if self.board.state[row][col] == self.board.EMPTY:
                     player = self.board.PLAYER_O if self.turn else self.board.PLAYER_X
@@ -79,23 +83,43 @@ class Game_Window:
                 if self.board.state[r][c] != self.board.EMPTY:
                     color = RED if self.board.state[r][c] == self.board.PLAYER_X else GREEN
                     text = font_players.render(self.board.state[r][c], True, color)
-                    x = (c * self.row_width) + self.row_width // 2 - text.get_width() // 2
-                    y = (r * self.col_height) + self.col_height // 2 - text.get_height() // 2
+                    x = (c * self.col_width) + self.col_width // 2 - text.get_width() // 2
+                    y = (r * self.row_height) + self.row_height // 2 - text.get_height() // 2
                     self.window.blit(text, (x, y))
-
+        self.draw_bar()
         pygame.display.update()
 
+    def draw_bar(self):
+        gap = 15
+        pygame.draw.rect(self.window, BLACK, (0, HEIGHT, WIDTH, BAR), 2)
+        human_score_text = font_score.render(f"Human: {self.human_player_score}", True, BLACK)
+        ai_score_text = font_score.render(f"AI: {self.ai_player_score}", True, BLACK)
+        draw_score_text = font_score.render(f"Draws: {self.draw_score}", True, BLACK)
+
+        self.window.blit(human_score_text, (gap, HEIGHT + (BAR - human_score_text.get_height()) // 2))
+        self.window.blit(ai_score_text, (3*gap + human_score_text.get_width(), HEIGHT + (BAR - ai_score_text.get_height()) // 2))
+        self.window.blit(draw_score_text, (5*gap + human_score_text.get_width() + ai_score_text.get_width(), HEIGHT + (BAR - draw_score_text.get_height()) // 2))
+
     def finish(self):
+        delay = 300
         if not self.human_playing and is_win(self.board.PLAYER_X, self.board) or \
             self.human_playing and is_win(self.board.PLAYER_O, self.board): 
             # if the player is X and X wins or player is O and O wins
             # print("You won!")
+            self.human_player_score += 1
             display_winner(self.window)
+            self.draw_bar()
+            pygame.display.update()
+            pygame.time.wait(delay)
         if not self.human_playing and is_win(self.board.PLAYER_O, self.board) or \
             self.human_playing and is_win(self.board.PLAYER_X, self.board): 
             # if the player is X and X loses or player is O and O loses
             # print("You lost!")
+            self.ai_player_score += 1
             display_loser(self.window)
+            self.draw_bar()
+            pygame.display.update()
+            pygame.time.wait(delay)
 
         if is_win(self.board.PLAYER_X, self.board) or is_win(self.board.PLAYER_O, self.board):
             self.board.reset()
@@ -104,8 +128,11 @@ class Game_Window:
             # print("It's a draw!")
             self.board.reset()
             self.turn = False
-
+            self.draw_score += 1
             display_draw(self.window)
+            self.draw_bar()
+            pygame.display.update()
+            pygame.time.wait(delay)
 
 
     def loop(self):
