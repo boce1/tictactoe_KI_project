@@ -27,4 +27,6 @@ Agents - GeekForGeeks - https://www.geeksforgeeks.org/artificial-intelligence/in
 
 Agents -  Fundamentals of artificial inteligence and machine learning, Zsolt Nagy
 
+Agents - Harvard CS50’s Artificial Intelligence with Python, Harvard university - https://www.youtube.com/watch?v=5NgNicANyqM&t=10442s
+
 Alpha beta pruning - Fundamentals of artificial inteligence and machine learning, Zsolt Nagy
