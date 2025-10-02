@@ -16,8 +16,15 @@ Run the aplication
 python3 main.py
 ```
 
-### For windows
-There's an extra option for windows machines. To start the game run ```TicTacToe.exe```.
-
 ## Documentation
-add documenentation
+
+## Refrences
+Minimax - GeekForGeeks -  https://www.geeksforgeeks.org/artificial-intelligence/mini-max-algorithm-in-artificial-intelligence/
+
+Minimax - Fundamentals of artificial inteligence and machine learning, Zsolt Nagy
+
+Agents - GeekForGeeks - https://www.geeksforgeeks.org/artificial-intelligence/intelligent-agent-in-ai/
+
+Agents -  Fundamentals of artificial inteligence and machine learning, Zsolt Nagy
+
+Alpha beta pruning - Fundamentals of artificial inteligence and machine learning, Zsolt Nagy
