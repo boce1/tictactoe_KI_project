@@ -21,24 +21,24 @@ def evaluate(board, ai_player):
     for row in board.state:
         if row.count(maximazing_player) == 2 and row.count(board.EMPTY) == 1:
             score += score_two_signs
-        if row[0] == row[2] == minimizing_player and row[1] == board.EMPTY:
+        if row.count(maximazing_player) == 2 and row.count(board.EMPTY) == 1:
             score -= score_two_signs
 
     for col in range(3):
         column = (board.state[0][col], board.state[1][col], board.state[2][col])
-        if column[0] == column[2] == maximazing_player and column[1] == board.EMPTY:
+        if column.count(maximazing_player) == 2 and column.count(board.EMPTY) == 1:
             score += score_two_signs
-        if column[0] == column[2] == minimizing_player and column[1] == board.EMPTY:
+        if column.count(minimizing_player) == 2 and column.count(board.EMPTY) == 1:
             score -= score_two_signs
 
-    if main_diagonal[0] == main_diagonal[2] == maximazing_player and main_diagonal[1] == board.EMPTY:
+    if main_diagonal.count(maximazing_player) == 2 and main_diagonal.count(board.EMPTY) == 1:
         score += score_two_signs
-    if main_diagonal[0] == main_diagonal[2] == minimizing_player and main_diagonal[1] == board.EMPTY:
+    if main_diagonal.count(minimizing_player) == 2 and main_diagonal.count(board.EMPTY) == 1:
         score -= score_two_signs
     
-    if anti_diagonal[0] == anti_diagonal[2] == maximazing_player and anti_diagonal[1] == board.EMPTY:
+    if anti_diagonal.count(maximazing_player) == 2 and anti_diagonal.count(board.EMPTY) == 1:
         score += score_two_signs
-    if anti_diagonal[0] == anti_diagonal[2] == minimizing_player and anti_diagonal[1] == board.EMPTY:
+    if anti_diagonal.count(minimizing_player) == 2 and anti_diagonal.count(board.EMPTY) == 1:
         score -= score_two_signs
 
     # evaluate the move where the player places its sign on the corners

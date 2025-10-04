@@ -24,3 +24,4 @@ def is_full(board):
             if cell == board.EMPTY:
                 return False
     return True
+
