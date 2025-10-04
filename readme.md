@@ -17,7 +17,7 @@ python3 main.py
 ```
 
 ## Documentation
-
+Documentation is written in ```documantation.pdf```.
 ## Refrences
 Minimax - GeekForGeeks -  https://www.geeksforgeeks.org/artificial-intelligence/mini-max-algorithm-in-artificial-intelligence/
 
